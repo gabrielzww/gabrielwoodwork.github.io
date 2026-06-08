@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GabrielWoodwork — Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Inline SVG hatch pattern for blueprint text fill -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <pattern id="hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(255,255,255,0.55)" stroke-width="2.5"/>
+      </pattern>
+      <pattern id="hatch-accent" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(212,169,106,0.7)" stroke-width="2.5"/>
+      </pattern>
+    </defs>
+  </svg>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface-2: #1a1a1a;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.15);
+      --text: #e8f4ff;
+      --text-muted: rgba(200,225,255,0.55);
+      --text-dim: rgba(200,225,255,0.25);
+      --accent: #ffffff;
+      --accent-dim: rgba(255,255,255,0.1);
+      --accent-glow: rgba(255,255,255,0.2);
+      --radius: 12px;
+      --radius-sm: 6px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+      color: var(--text);
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 400;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .brand-icon {
+      width: 32px; height: 32px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(212,169,106,0.2);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+
+    .brand-name {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 22px;
+      letter-spacing: 0.1em;
+      color: var(--text);
+      -webkit-text-stroke: 0.5px rgba(240,237,232,0.4);
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+
+    .count-pill {
+      padding: 4px 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--accent);
+      color: #0a0a0a;
+      border: none;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      background: rgba(255,255,255,0.85);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 80px 32px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(212,169,106,0.15);
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 5px; height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .hero-svg-wrap {
+      width: 340px;
+      max-width: 100%;
+    }
+
+    .hero-svg {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(44px, 6.5vw, 80px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: 0.01em;
+      color: var(--text);
+      max-width: 700px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    /* ─── GALLERY ─── */
+    .gallery-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    .gallery-grid {
+      columns: 3;
+      column-gap: 16px;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+
+    @media (max-width: 960px) { .gallery-grid { columns: 2; } }
+    @media (max-width: 560px) { .gallery-grid { columns: 1; } }
+
+    .photo-card {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.3s ease,
+                  border-color 0.3s ease;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-6px) scale(1.005);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px var(--border-hover);
+      border-color: var(--border-hover);
+    }
+
+    .photo-card img {
+      width: 100%;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .photo-card:hover img { transform: scale(1.03); }
+
+    .card-footer {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .card-delete {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--text-dim);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+      opacity: 0;
+    }
+
+    .photo-card:hover .card-delete { opacity: 1; }
+    .card-delete { opacity: 1; }
+    .card-delete:hover { background: rgba(255,80,60,0.1); border-color: rgba(255,80,60,0.2); color: #ff5040; }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 32px;
+      gap: 16px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .empty-state.visible { display: flex; }
+
+    .empty-icon {
+      width: 72px; height: 72px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .empty-state h3 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 32px;
+      color: var(--text);
+      letter-spacing: 0.1em;
+      -webkit-text-stroke: 1px rgba(240,237,232,0.3);
+    }
+
+    .empty-state p {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 280px;
+      line-height: 1.6;
+    }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border-hover);
+      border-radius: 20px;
+      width: 100%; max-width: 460px;
+      padding: 32px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .modal-header h2 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 28px;
+      letter-spacing: 0.1em;
+      -webkit-text-stroke: 0.5px rgba(240,237,232,0.3);
+    }
+
+    .modal-close {
+      width: 32px; height: 32px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .modal-close:hover { background: var(--border); color: var(--text); }
+
+    .field { margin-bottom: 18px; }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 7px;
+      letter-spacing: 0.03em;
+    }
+
+    .field input, .field textarea {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus, .field textarea:focus {
+      border-color: rgba(212,169,106,0.4);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+
+    .field input::placeholder, .field textarea::placeholder { color: var(--text-dim); }
+    .field textarea { resize: vertical; min-height: 72px; }
+
+    /* date input color fix */
+    .field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
+
+    .drop-zone {
+      position: relative;
+      background: var(--surface-2);
+      border: 1px dashed var(--border-hover);
+      border-radius: var(--radius-sm);
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: rgba(212,169,106,0.4);
+      background: var(--accent-dim);
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+    }
+
+    .dz-icon { font-size: 24px; margin-bottom: 8px; opacity: 0.5; }
+
+    .dz-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .dz-text strong { color: var(--accent); font-weight: 500; }
+
+    .dz-selected {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .modal-actions {
+      display: flex; gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn-ghost {
+      flex: 1;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      padding: 10px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all 0.15s;
+    }
+
+    .btn-ghost:hover { border-color: var(--border-hover); color: var(--text); }
+
+    .btn-save {
+      flex: 2;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #0a0a0a;
+      padding: 10px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-save:hover {
+      background: #e0bc82;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    /* ─── LIGHTBOX ─── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(16px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .lightbox.open {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: 90vw;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lightbox-inner img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      border-radius: var(--radius);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+    }
+
+    .lightbox-meta {
+      text-align: center;
+    }
+
+    .lightbox-meta strong {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 26px;
+      color: var(--text);
+      display: block;
+      margin-bottom: 4px;
+      letter-spacing: 0.1em;
+      -webkit-text-stroke: 0.5px rgba(240,237,232,0.3);
+    }
+
+    .lightbox-meta span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 24px; right: 24px;
+      width: 40px; height: 40px;
+      background: var(--surface);
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .lightbox-close:hover { background: var(--surface-2); color: var(--text); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* stagger cards */
+    .photo-card:nth-child(1) { animation: fadeUp 0.5s ease 0.05s both; }
+    .photo-card:nth-child(2) { animation: fadeUp 0.5s ease 0.10s both; }
+    .photo-card:nth-child(3) { animation: fadeUp 0.5s ease 0.15s both; }
+    .photo-card:nth-child(4) { animation: fadeUp 0.5s ease 0.20s both; }
+    .photo-card:nth-child(5) { animation: fadeUp 0.5s ease 0.25s both; }
+    .photo-card:nth-child(n+6) { animation: fadeUp 0.5s ease 0.30s both; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="brand-icon">🪵</div>
+    <span class="brand-name">GabrielWoodwork</span>
+  </div>
+  <div class="nav-right">
+    <div class="count-pill" id="countPill">0 photos</div>
+    <button class="btn-primary" onclick="openModal()">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+        <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Add Photo
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Woodworking Gallery</div>
+  <!-- Blueprint hatched SVG heading -->
+  <div class="hero-svg-wrap">
+    <svg class="hero-svg" viewBox="0 0 400 85" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="hatch-white" patternUnits="userSpaceOnUse" width="9" height="9" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="9" stroke="rgba(232,244,255,0.55)" stroke-width="3"/>
+        </pattern>
+        <pattern id="hatch-gold" patternUnits="userSpaceOnUse" width="9" height="9" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="9" stroke="rgba(255,255,255,0.65)" stroke-width="3"/>
+        </pattern>
+      </defs>
+      <text x="0" y="75" font-family="'Bebas Neue', cursive" font-size="70" fill="url(#hatch-gold)" stroke="#e8f4ff" stroke-width="1.8" paint-order="stroke fill">Projects</text>
+    </svg>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div class="gallery-wrap">
+  <div class="gallery-grid" id="gallery"></div>
+  <div class="empty-state visible" id="emptyState">
+    <div class="empty-icon">🪚</div>
+    <h3>Nothing here yet</h3>
+    <p>Add your first photo to start building your woodworking gallery.</p>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Add Photo</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="field">
+      <label>Image</label>
+      <div class="drop-zone" id="dropZone">
+        <input type="file" accept="image/*" id="fileInput" onchange="handleFile(event)">
+        <div class="dz-icon">📷</div>
+        <div class="dz-text">Drop an image here, or <strong>browse</strong></div>
+        <div class="dz-selected" id="selectedName"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Title</label>
+      <input type="text" id="titleInput" placeholder="e.g. Dovetail joints on the cabinet">
+    </div>
+
+    <div class="field">
+      <label>Date</label>
+      <input type="date" id="dateInput">
+    </div>
+
+    <div class="field">
+      <label>Notes</label>
+      <textarea id="notesInput" placeholder="Wood species, techniques, finish..."></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="savePhoto()">Add to Gallery</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-inner" onclick="e => e.stopPropagation()">
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-meta">
+      <strong id="lightboxTitle"></strong>
+      <span id="lightboxDate"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Cloudinary config ──────────────────────────────────────
+  const CLOUD_NAME   = 'gabrielwoodwork';
+  const UPLOAD_PRESET = 'woodwork_gallery';
+  const JSONBIN_URL  = 'https://api.jsonbin.io/v3/b';
+  const JSONBIN_KEY  = '$2a$10$4PFU/6MDrv2Ktu1CLMf4WeLCQXJD2p3gQe/QKd.18MJT4TKr44WqO';
+  let BIN_ID = '6a26399bf5f4af5e29c9040b';
+
+  // ── State ──────────────────────────────────────────────────
+  let photos = [];
+  let currentFile = null;
+
+  const gallery     = document.getElementById('gallery');
+  const emptyState  = document.getElementById('emptyState');
+  const countPill   = document.getElementById('countPill');
+  const modalOverlay= document.getElementById('modalOverlay');
+  const dropZone    = document.getElementById('dropZone');
+  const selectedName= document.getElementById('selectedName');
+  const lightbox    = document.getElementById('lightbox');
+
+  // ── Helpers ────────────────────────────────────────────────
+  function formatDate(d) {
+    if (!d) return '';
+    const [y, m, day] = d.split('-');
+    return new Date(+y, +m-1, +day).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  }
+
+  function updateCount() {
+    const n = photos.length;
+    countPill.textContent = n === 1 ? '1 photo' : `${n} photos`;
+  }
+
+  // ── JSONBin: load & save shared photo list ─────────────────
+  async function loadPhotos() {
+    if (!BIN_ID || !JSONBIN_KEY) {
+      // fallback to localStorage if JSONBin not configured
+      photos = JSON.parse(localStorage.getItem('workshop_photos') || '[]');
+      render(); return;
+    }
+    try {
+      const res = await fetch(`${JSONBIN_URL}/${BIN_ID}/latest`, {
+        headers: { 'X-Master-Key': JSONBIN_KEY }
+      });
+      const data = await res.json();
+      photos = data.record.photos || [];
+    } catch(e) {
+      photos = JSON.parse(localStorage.getItem('workshop_photos') || '[]');
+    }
+    render();
+  }
+
+  async function savePhotos() {
+    localStorage.setItem('workshop_photos', JSON.stringify(photos));
+    if (!BIN_ID || !JSONBIN_KEY) return;
+    try {
+      await fetch(`${JSONBIN_URL}/${BIN_ID}`, {
+        method: 'PUT',
+        headers: { 'Content-Type':'application/json', 'X-Master-Key': JSONBIN_KEY },
+        body: JSON.stringify({ photos })
+      });
+    } catch(e) { console.error('Save failed', e); }
+  }
+
+  // ── Cloudinary upload ──────────────────────────────────────
+  async function uploadToCloudinary(file) {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', UPLOAD_PRESET);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+      method: 'POST', body: fd
+    });
+    const data = await res.json();
+    if (data.secure_url) return data.secure_url;
+    throw new Error(data.error?.message || 'Upload failed');
+  }
+
+  // ── Render gallery ─────────────────────────────────────────
+  function render() {
+    gallery.innerHTML = '';
+    updateCount();
+    if (photos.length === 0) { emptyState.classList.add('visible'); return; }
+    emptyState.classList.remove('visible');
+
+    photos.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'photo-card';
+      card.innerHTML = `
+        <img src="${p.src}" alt="${p.title}" loading="lazy">
+        <div class="card-footer">
+          <span class="card-title">${p.title || 'Untitled'}</span>
+          <button class="card-delete" title="Delete" data-index="${i}">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="pointer-events:none">
+              <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      `;
+      card.querySelector('.card-delete').addEventListener('click', e => {
+        e.stopPropagation(); e.preventDefault();
+        photos.splice(i, 1);
+        savePhotos(); render();
+      });
+      card.addEventListener('click', e => {
+        if (e.target.closest('.card-delete')) return;
+        openLightbox(p);
+      });
+      gallery.appendChild(card);
+    });
+  }
+
+  // ── Modal ──────────────────────────────────────────────────
+  function openModal() {
+    modalOverlay.classList.add('open');
+    document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+    setTimeout(() => document.getElementById('titleInput').focus(), 200);
+  }
+
+  function closeModal() { modalOverlay.classList.remove('open'); resetForm(); }
+  function handleOverlayClick(e) { if (e.target === modalOverlay) closeModal(); }
+
+  function resetForm() {
+    ['titleInput','dateInput','notesInput'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fileInput').value = '';
+    selectedName.textContent = '';
+    currentFile = null;
+  }
+
+  function handleFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    currentFile = file;
+    selectedName.textContent = file.name;
+    const t = document.getElementById('titleInput');
+    if (!t.value) t.value = file.name.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ');
+  }
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      currentFile = file;
+      selectedName.textContent = file.name;
+      const t = document.getElementById('titleInput');
+      if (!t.value) t.value = file.name.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ');
+    }
+  });
+
+  // ── Save photo ─────────────────────────────────────────────
+  async function savePhoto() {
+    if (!currentFile) { alert('Please select a photo first.'); return; }
+
+    const saveBtn = document.querySelector('.btn-save');
+    saveBtn.textContent = 'Uploading...';
+    saveBtn.disabled = true;
+
+    try {
+      const url = await uploadToCloudinary(currentFile);
+      photos.unshift({
+        src: url,
+        title: document.getElementById('titleInput').value || 'Untitled',
+        date:  document.getElementById('dateInput').value,
+        notes: document.getElementById('notesInput').value
+      });
+      await savePhotos();
+      render(); closeModal();
+    } catch(err) {
+      alert('Upload failed: ' + err.message);
+    } finally {
+      saveBtn.textContent = 'Add to Gallery';
+      saveBtn.disabled = false;
+    }
+  }
+
+  // ── Lightbox ───────────────────────────────────────────────
+  function openLightbox(p) {
+    document.getElementById('lightboxImg').src = p.src;
+    document.getElementById('lightboxTitle').textContent = p.title || '';
+    document.getElementById('lightboxDate').textContent = formatDate(p.date);
+    lightbox.classList.add('open');
+  }
+
+  function closeLightbox() { lightbox.classList.remove('open'); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeLightbox(); closeModal(); }
+  });
+
+  // ── Init ───────────────────────────────────────────────────
+  loadPhotos();
+</script>
+</body>
+</html>

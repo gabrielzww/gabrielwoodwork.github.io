@@ -97,7 +97,24 @@
       transition: all 0.2s;
     }
 
-    .btn-primary {
+    .btn-discreet {
+      width: 32px; height: 32px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.35;
+    }
+
+    .btn-discreet:hover {
+      opacity: 1;
+      color: var(--text);
+      border-color: var(--border);
+      background: var(--surface-2);
+    }
       display: flex; align-items: center; gap: 8px;
       background: var(--accent);
       color: #0a0a0a;
@@ -574,14 +591,34 @@
   </div>
   <div class="nav-right">
     <div class="count-pill" id="countPill">0 photos</div>
-    <button class="btn-primary" onclick="openModal()">
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-        <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <button class="btn-discreet" onclick="checkPassword()" title="Add Photo">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 11V7a4 4 0 1 1 8 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
-      Add Photo
     </button>
   </div>
 </nav>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="passwordOverlay" onclick="handlePasswordOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Admin Access</h2>
+      <button class="modal-close" onclick="closePasswordModal()">✕</button>
+    </div>
+    <p style="color:var(--text-muted);font-size:13px;margin-bottom:20px;letter-spacing:0.03em;">Enter your password to add photos.</p>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="passwordInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')submitPassword()">
+    </div>
+    <div id="passwordError" style="color:#ff5040;font-size:12px;margin-top:-10px;margin-bottom:12px;display:none;">Incorrect password. Try again.</div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closePasswordModal()">Cancel</button>
+      <button class="btn-save" onclick="submitPassword()">Unlock</button>
+    </div>
+  </div>
+</div>
 
 <!-- HERO -->
 <div class="hero">
@@ -672,6 +709,40 @@
   const JSONBIN_KEY  = '$2a$10$4PFU/6MDrv2Ktu1CLMf4WeLCQXJD2p3gQe/QKd.18MJT4TKr44WqO';
   let BIN_ID = '6a26399bf5f4af5e29c9040b';
 
+  // ── Password ───────────────────────────────────────────────
+  const ADMIN_PASSWORD = 'gabriel2024'; // 👈 change this to your own password
+  let isUnlocked = sessionStorage.getItem('gw_unlocked') === 'true';
+
+  function checkPassword() {
+    if (isUnlocked) { openModal(); return; }
+    document.getElementById('passwordOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('passwordInput').focus(), 200);
+  }
+
+  function submitPassword() {
+    const val = document.getElementById('passwordInput').value;
+    if (val === ADMIN_PASSWORD) {
+      isUnlocked = true;
+      sessionStorage.setItem('gw_unlocked', 'true');
+      closePasswordModal();
+      openModal();
+    } else {
+      document.getElementById('passwordError').style.display = 'block';
+      document.getElementById('passwordInput').value = '';
+      document.getElementById('passwordInput').focus();
+    }
+  }
+
+  function closePasswordModal() {
+    document.getElementById('passwordOverlay').classList.remove('open');
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('passwordError').style.display = 'none';
+  }
+
+  function handlePasswordOverlay(e) {
+    if (e.target === document.getElementById('passwordOverlay')) closePasswordModal();
+  }
+
   // ── State ──────────────────────────────────────────────────
   let photos = [];
   let currentFile = null;
@@ -754,7 +825,7 @@
         <img src="${p.src}" alt="${p.title}" loading="lazy">
         <div class="card-footer">
           <span class="card-title">${p.title || 'Untitled'}</span>
-          <button class="card-delete" title="Delete" data-index="${i}">
+          <button class="card-delete" title="Delete" data-index="${i}" style="display:${isUnlocked ? 'flex' : 'none'}">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="pointer-events:none">
               <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>

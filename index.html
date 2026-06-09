@@ -820,7 +820,6 @@
 
   const gallery     = document.getElementById('gallery');
   const emptyState  = document.getElementById('emptyState');
-  const countPill   = document.getElementById('countPill');
   const modalOverlay= document.getElementById('modalOverlay');
   const dropZone    = document.getElementById('dropZone');
   const selectedName= document.getElementById('selectedName');
@@ -834,8 +833,7 @@
   }
 
   function updateCount() {
-    const n = photos.length;
-    countPill.textContent = n === 1 ? '1 photo' : `${n} photos`;
+    // count pill removed
   }
 
   // ── JSONBin: load & save shared photo list ─────────────────

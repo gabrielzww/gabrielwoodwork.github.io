@@ -749,6 +749,11 @@
     <span class="brand-name">GabrielWoodwork</span>
   </div>
   <div class="nav-right">
+    <button class="btn-discreet" id="signOutBtn" onclick="signOut()" title="Sign Out" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
     <button class="btn-discreet" id="editOrderBtn" onclick="toggleEditOrder()" title="Edit Order" style="display:none">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
         <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -928,6 +933,7 @@
       sessionStorage.setItem('gw_unlocked', 'true');
       closePasswordModal();
       document.getElementById('editOrderBtn').style.display = 'flex';
+      document.getElementById('signOutBtn').style.display = 'flex';
       openModal();
     } else {
       document.getElementById('passwordError').style.display = 'block';
@@ -936,7 +942,13 @@
     }
   }
 
-  function closePasswordModal() {
+  function signOut() {
+    isUnlocked = false;
+    sessionStorage.removeItem('gw_unlocked');
+    document.getElementById('signOutBtn').style.display = 'none';
+    document.getElementById('editOrderBtn').style.display = 'none';
+    render();
+  }
     document.getElementById('passwordOverlay').classList.remove('open');
     document.getElementById('passwordInput').value = '';
     document.getElementById('passwordError').style.display = 'none';
@@ -1189,7 +1201,10 @@
   });
 
   // ── Init ───────────────────────────────────────────────────
-  if (isUnlocked) document.getElementById('editOrderBtn').style.display = 'flex';
+  if (isUnlocked) {
+    document.getElementById('editOrderBtn').style.display = 'flex';
+    document.getElementById('signOutBtn').style.display = 'flex';
+  }
   loadPhotos();
 </script>
 </body>

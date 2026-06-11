@@ -575,41 +575,90 @@
 
     .edit-banner span { flex: 1; }
 
-    .reorder-controls {
-      position: absolute;
-      top: 8px; left: 8px;
-      display: none;
-      display: none;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-      z-index: 10;
+    /* Reorder Modal */
+    .reorder-modal {
+      background: var(--surface);
+      border: 1px solid var(--border-hover);
+      border-radius: 20px;
+      width: 100%; max-width: 520px;
+      padding: 32px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      max-height: 85vh;
+      overflow-y: auto;
     }
 
-    body.edit-mode .reorder-controls { display: grid; }
+    .reorder-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .reorder-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      transition: border-color 0.2s;
+    }
+
+    .reorder-item:hover { border-color: var(--border-hover); }
+
+    .reorder-item img {
+      width: 52px; height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .reorder-item-title {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .reorder-item-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex-shrink: 0;
+    }
 
     .reorder-btn {
-      width: 30px; height: 30px;
-      background: rgba(0,0,0,0.75);
-      border: 1px solid rgba(255,220,0,0.4);
+      width: 26px; height: 26px;
+      background: transparent;
+      border: 1px solid var(--border);
       border-radius: 4px;
-      color: rgba(255,220,0,0.9);
-      font-size: 14px;
+      color: var(--text-muted);
+      font-size: 12px;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.15s;
     }
 
-    .reorder-btn:hover {
-      background: rgba(255,220,0,0.15);
-      border-color: rgba(255,220,0,0.8);
+    .reorder-btn:hover:not(:disabled) {
+      background: rgba(255,220,0,0.1);
+      border-color: rgba(255,220,0,0.4);
+      color: rgba(255,220,0,0.9);
     }
 
-    .reorder-btn:disabled {
-      opacity: 0.2;
-      cursor: default;
-    }
+    .reorder-btn:disabled { opacity: 0.2; cursor: default; }
 
-    .photo-card { position: relative; }
+    .reorder-position {
+      width: 28px;
+      text-align: center;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
 
     /* ─── FOOTER ─── */
     footer {
@@ -706,12 +755,19 @@
   </div>
 </nav>
 
-<!-- EDIT ORDER BANNER -->
-<div id="editOrderBanner" style="display:none">
-  <div class="edit-banner">
-    <span>✦ Use arrows to reorder photos</span>
-    <button class="btn-save" onclick="saveOrder()" style="padding:7px 18px;font-size:12px;">Save Order</button>
-    <button class="btn-ghost" onclick="cancelEditOrder()" style="padding:7px 14px;font-size:12px;">Cancel</button>
+<!-- REORDER MODAL -->
+<div class="modal-overlay" id="reorderOverlay" onclick="handleReorderOverlay(event)">
+  <div class="reorder-modal">
+    <div class="modal-header">
+      <h2>Reorder Photos</h2>
+      <button class="modal-close" onclick="cancelEditOrder()">✕</button>
+    </div>
+    <p style="color:var(--text-muted);font-size:13px;letter-spacing:0.03em;">Use the arrows to move each photo up or down.</p>
+    <div class="reorder-list" id="reorderList"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="cancelEditOrder()">Cancel</button>
+      <button class="btn-save" onclick="saveOrder()">Save Order</button>
+    </div>
   </div>
 </div>
 
@@ -962,12 +1018,6 @@
       const card = document.createElement('div');
       card.className = 'photo-card';
       card.innerHTML = `
-        <div class="reorder-controls">
-          <button class="reorder-btn" title="Move left" ${i === 0 ? 'disabled' : ''} onclick="movePhoto(${i}, -1)">←</button>
-          <button class="reorder-btn" title="Move right" ${i === photos.length - 1 ? 'disabled' : ''} onclick="movePhoto(${i}, 1)">→</button>
-          <button class="reorder-btn" title="Move up" ${i < 3 ? 'disabled' : ''} onclick="movePhoto(${i}, -3)">↑</button>
-          <button class="reorder-btn" title="Move down" ${i >= photos.length - 3 ? 'disabled' : ''} onclick="movePhoto(${i}, 3)">↓</button>
-        </div>
         <img src="${p.src}" alt="${p.title}" loading="lazy">
         <div class="card-footer">
           <span class="card-title">${p.title || 'Untitled'}</span>
@@ -984,7 +1034,6 @@
         savePhotos(); render();
       });
       card.addEventListener('click', e => {
-        if (editMode) return;
         if (e.target.closest('.card-delete')) return;
         openLightbox(p);
       });
@@ -1060,45 +1109,60 @@
   // ── Edit Order ─────────────────────────────────────────────
   let editMode = false;
   let photosCopy = [];
+  let tempPhotos = [];
 
   function toggleEditOrder() {
-    if (!editMode) enterEditMode();
-    else cancelEditOrder();
+    openReorderModal();
   }
 
-  function enterEditMode() {
-    editMode = true;
-    photosCopy = [...photos];
-    document.getElementById('editOrderBanner').style.display = 'block';
-    document.getElementById('editOrderBtn').style.opacity = '1';
-    document.body.classList.add('edit-mode');
-    render();
+  function openReorderModal() {
+    tempPhotos = [...photos];
+    renderReorderList();
+    document.getElementById('reorderOverlay').classList.add('open');
+  }
+
+  function handleReorderOverlay(e) {
+    if (e.target === document.getElementById('reorderOverlay')) cancelEditOrder();
+  }
+
+  function renderReorderList() {
+    const list = document.getElementById('reorderList');
+    list.innerHTML = '';
+    tempPhotos.forEach((p, i) => {
+      const item = document.createElement('div');
+      item.className = 'reorder-item';
+      item.innerHTML = `
+        <span class="reorder-position">${i + 1}</span>
+        <img src="${p.src}" alt="${p.title}">
+        <span class="reorder-item-title">${p.title || 'Untitled'}</span>
+        <div class="reorder-item-btns">
+          <button class="reorder-btn" title="Move up" ${i === 0 ? 'disabled' : ''} onclick="moveTemp(${i}, -1)">▲</button>
+          <button class="reorder-btn" title="Move down" ${i === tempPhotos.length - 1 ? 'disabled' : ''} onclick="moveTemp(${i}, 1)">▼</button>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  function moveTemp(index, direction) {
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= tempPhotos.length) return;
+    const temp = tempPhotos[index];
+    tempPhotos[index] = tempPhotos[newIndex];
+    tempPhotos[newIndex] = temp;
+    renderReorderList();
   }
 
   function cancelEditOrder() {
-    editMode = false;
-    photos = [...photosCopy];
-    document.getElementById('editOrderBanner').style.display = 'none';
-    document.getElementById('editOrderBtn').style.opacity = '';
-    document.body.classList.remove('edit-mode');
-    render();
+    document.getElementById('reorderOverlay').classList.remove('open');
+    tempPhotos = [];
   }
 
   async function saveOrder() {
-    editMode = false;
-    document.getElementById('editOrderBanner').style.display = 'none';
-    document.getElementById('editOrderBtn').style.opacity = '';
-    document.body.classList.remove('edit-mode');
+    photos = [...tempPhotos];
+    document.getElementById('reorderOverlay').classList.remove('open');
+    tempPhotos = [];
     await savePhotos();
-    render();
-  }
-
-  function movePhoto(index, direction) {
-    const newIndex = index + direction;
-    if (newIndex < 0 || newIndex >= photos.length) return;
-    const temp = photos[index];
-    photos[index] = photos[newIndex];
-    photos[newIndex] = temp;
     render();
   }
 

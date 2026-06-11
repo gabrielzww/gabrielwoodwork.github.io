@@ -942,6 +942,12 @@
     }
   }
 
+  function closePasswordModal() {
+    document.getElementById('passwordOverlay').classList.remove('open');
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('passwordError').style.display = 'none';
+  }
+
   function signOut() {
     isUnlocked = false;
     sessionStorage.removeItem('gw_unlocked');
@@ -1031,8 +1037,11 @@
     if (photos.length === 0) { emptyState.classList.add('visible'); return; }
     emptyState.classList.remove('visible');
 
-    // show edit order button if unlocked
-    if (isUnlocked) document.getElementById('editOrderBtn').style.display = 'flex';
+    // show admin buttons if unlocked
+    if (isUnlocked) {
+      document.getElementById('editOrderBtn').style.display = 'flex';
+      document.getElementById('signOutBtn').style.display = 'flex';
+    }
 
     photos.forEach((p, i) => {
       const card = document.createElement('div');

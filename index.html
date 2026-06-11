@@ -579,12 +579,13 @@
       position: absolute;
       top: 8px; left: 8px;
       display: none;
-      flex-direction: column;
+      display: none;
+      grid-template-columns: 1fr 1fr;
       gap: 4px;
       z-index: 10;
     }
 
-    body.edit-mode .reorder-controls { display: flex; }
+    body.edit-mode .reorder-controls { display: grid; }
 
     .reorder-btn {
       width: 30px; height: 30px;
@@ -964,6 +965,8 @@
         <div class="reorder-controls">
           <button class="reorder-btn" title="Move left" ${i === 0 ? 'disabled' : ''} onclick="movePhoto(${i}, -1)">←</button>
           <button class="reorder-btn" title="Move right" ${i === photos.length - 1 ? 'disabled' : ''} onclick="movePhoto(${i}, 1)">→</button>
+          <button class="reorder-btn" title="Move up" ${i < 3 ? 'disabled' : ''} onclick="movePhoto(${i}, -3)">↑</button>
+          <button class="reorder-btn" title="Move down" ${i >= photos.length - 3 ? 'disabled' : ''} onclick="movePhoto(${i}, 3)">↓</button>
         </div>
         <img src="${p.src}" alt="${p.title}" loading="lazy">
         <div class="card-footer">

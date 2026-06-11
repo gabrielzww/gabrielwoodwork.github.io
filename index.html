@@ -575,24 +575,40 @@
 
     .edit-banner span { flex: 1; }
 
-    .photo-card.dragging {
-      opacity: 0.4;
-      transform: scale(0.97);
-      border-color: rgba(255,220,0,0.4) !important;
+    .reorder-controls {
+      position: absolute;
+      top: 8px; left: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 10;
     }
 
-    .photo-card.drag-over-card {
-      border-color: rgba(255,220,0,0.6) !important;
-      box-shadow: 0 0 0 2px rgba(255,220,0,0.2) !important;
+    body.edit-mode .reorder-controls { display: flex; }
+
+    .reorder-btn {
+      width: 30px; height: 30px;
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(255,220,0,0.4);
+      border-radius: 4px;
+      color: rgba(255,220,0,0.9);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
     }
 
-    body.edit-mode .photo-card {
-      cursor: grab;
+    .reorder-btn:hover {
+      background: rgba(255,220,0,0.15);
+      border-color: rgba(255,220,0,0.8);
     }
 
-    body.edit-mode .photo-card:active {
-      cursor: grabbing;
+    .reorder-btn:disabled {
+      opacity: 0.2;
+      cursor: default;
     }
+
+    .photo-card { position: relative; }
 
     /* ─── FOOTER ─── */
     footer {
@@ -692,7 +708,7 @@
 <!-- EDIT ORDER BANNER -->
 <div id="editOrderBanner" style="display:none">
   <div class="edit-banner">
-    <span>✦ Drag photos to reorder</span>
+    <span>✦ Use arrows to reorder photos</span>
     <button class="btn-save" onclick="saveOrder()" style="padding:7px 18px;font-size:12px;">Save Order</button>
     <button class="btn-ghost" onclick="cancelEditOrder()" style="padding:7px 14px;font-size:12px;">Cancel</button>
   </div>
@@ -945,6 +961,10 @@
       const card = document.createElement('div');
       card.className = 'photo-card';
       card.innerHTML = `
+        <div class="reorder-controls">
+          <button class="reorder-btn" title="Move left" ${i === 0 ? 'disabled' : ''} onclick="movePhoto(${i}, -1)">←</button>
+          <button class="reorder-btn" title="Move right" ${i === photos.length - 1 ? 'disabled' : ''} onclick="movePhoto(${i}, 1)">→</button>
+        </div>
         <img src="${p.src}" alt="${p.title}" loading="lazy">
         <div class="card-footer">
           <span class="card-title">${p.title || 'Untitled'}</span>
@@ -965,7 +985,6 @@
         if (e.target.closest('.card-delete')) return;
         openLightbox(p);
       });
-      if (editMode) addDragHandlers(card, i);
       gallery.appendChild(card);
     });
   }
@@ -1037,7 +1056,6 @@
 
   // ── Edit Order ─────────────────────────────────────────────
   let editMode = false;
-  let dragSrcIndex = null;
   let photosCopy = [];
 
   function toggleEditOrder() {
@@ -1072,35 +1090,13 @@
     render();
   }
 
-  function addDragHandlers(card, index) {
-    card.setAttribute('draggable', 'true');
-
-    card.addEventListener('dragstart', e => {
-      dragSrcIndex = index;
-      card.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-
-    card.addEventListener('dragend', () => {
-      card.classList.remove('dragging');
-      document.querySelectorAll('.photo-card').forEach(c => c.classList.remove('drag-over-card'));
-    });
-
-    card.addEventListener('dragover', e => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      document.querySelectorAll('.photo-card').forEach(c => c.classList.remove('drag-over-card'));
-      card.classList.add('drag-over-card');
-    });
-
-    card.addEventListener('drop', e => {
-      e.preventDefault();
-      if (dragSrcIndex === null || dragSrcIndex === index) return;
-      const moved = photos.splice(dragSrcIndex, 1)[0];
-      photos.splice(index, 0, moved);
-      dragSrcIndex = null;
-      render();
-    });
+  function movePhoto(index, direction) {
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= photos.length) return;
+    const temp = photos[index];
+    photos[index] = photos[newIndex];
+    photos[newIndex] = temp;
+    render();
   }
 
   // ── Lightbox ───────────────────────────────────────────────

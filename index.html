@@ -558,6 +558,42 @@
 
     .lightbox-close:hover { background: var(--surface-2); color: var(--text); }
 
+    /* ─── EDIT ORDER ─── */
+    .edit-banner {
+      background: rgba(255,220,0,0.08);
+      border-bottom: 1px solid rgba(255,220,0,0.2);
+      padding: 10px 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: rgba(255,220,0,0.8);
+      text-transform: uppercase;
+    }
+
+    .edit-banner span { flex: 1; }
+
+    .photo-card.dragging {
+      opacity: 0.4;
+      transform: scale(0.97);
+      border-color: rgba(255,220,0,0.4) !important;
+    }
+
+    .photo-card.drag-over-card {
+      border-color: rgba(255,220,0,0.6) !important;
+      box-shadow: 0 0 0 2px rgba(255,220,0,0.2) !important;
+    }
+
+    body.edit-mode .photo-card {
+      cursor: grab;
+    }
+
+    body.edit-mode .photo-card:active {
+      cursor: grabbing;
+    }
+
     /* ─── FOOTER ─── */
     footer {
       border-top: 1px solid var(--border);
@@ -639,6 +675,11 @@
     <span class="brand-name">GabrielWoodwork</span>
   </div>
   <div class="nav-right">
+    <button class="btn-discreet" id="editOrderBtn" onclick="toggleEditOrder()" title="Edit Order" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
     <button class="btn-discreet" onclick="checkPassword()" title="Add Photo">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
         <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/>
@@ -647,6 +688,15 @@
     </button>
   </div>
 </nav>
+
+<!-- EDIT ORDER BANNER -->
+<div id="editOrderBanner" style="display:none">
+  <div class="edit-banner">
+    <span>✦ Drag photos to reorder</span>
+    <button class="btn-save" onclick="saveOrder()" style="padding:7px 18px;font-size:12px;">Save Order</button>
+    <button class="btn-ghost" onclick="cancelEditOrder()" style="padding:7px 14px;font-size:12px;">Cancel</button>
+  </div>
+</div>
 
 <!-- PASSWORD MODAL -->
 <div class="modal-overlay" id="passwordOverlay" onclick="handlePasswordOverlay(event)">
@@ -887,6 +937,9 @@
     if (photos.length === 0) { emptyState.classList.add('visible'); return; }
     emptyState.classList.remove('visible');
 
+    // show edit order button if unlocked
+    if (isUnlocked) document.getElementById('editOrderBtn').style.display = 'flex';
+
     photos.forEach((p, i) => {
       const card = document.createElement('div');
       card.className = 'photo-card';
@@ -907,9 +960,11 @@
         savePhotos(); render();
       });
       card.addEventListener('click', e => {
+        if (editMode) return;
         if (e.target.closest('.card-delete')) return;
         openLightbox(p);
       });
+      if (editMode) addDragHandlers(card, i);
       gallery.appendChild(card);
     });
   }
@@ -977,6 +1032,74 @@
       saveBtn.textContent = 'Add to Gallery';
       saveBtn.disabled = false;
     }
+  }
+
+  // ── Edit Order ─────────────────────────────────────────────
+  let editMode = false;
+  let dragSrcIndex = null;
+  let photosCopy = [];
+
+  function toggleEditOrder() {
+    if (!editMode) enterEditMode();
+    else cancelEditOrder();
+  }
+
+  function enterEditMode() {
+    editMode = true;
+    photosCopy = [...photos];
+    document.getElementById('editOrderBanner').style.display = 'block';
+    document.getElementById('editOrderBtn').style.opacity = '1';
+    document.body.classList.add('edit-mode');
+    render();
+  }
+
+  function cancelEditOrder() {
+    editMode = false;
+    photos = [...photosCopy];
+    document.getElementById('editOrderBanner').style.display = 'none';
+    document.getElementById('editOrderBtn').style.opacity = '';
+    document.body.classList.remove('edit-mode');
+    render();
+  }
+
+  async function saveOrder() {
+    editMode = false;
+    document.getElementById('editOrderBanner').style.display = 'none';
+    document.getElementById('editOrderBtn').style.opacity = '';
+    document.body.classList.remove('edit-mode');
+    await savePhotos();
+    render();
+  }
+
+  function addDragHandlers(card, index) {
+    card.setAttribute('draggable', 'true');
+
+    card.addEventListener('dragstart', e => {
+      dragSrcIndex = index;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      document.querySelectorAll('.photo-card').forEach(c => c.classList.remove('drag-over-card'));
+    });
+
+    card.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      document.querySelectorAll('.photo-card').forEach(c => c.classList.remove('drag-over-card'));
+      card.classList.add('drag-over-card');
+    });
+
+    card.addEventListener('drop', e => {
+      e.preventDefault();
+      if (dragSrcIndex === null || dragSrcIndex === index) return;
+      const moved = photos.splice(dragSrcIndex, 1)[0];
+      photos.splice(index, 0, moved);
+      dragSrcIndex = null;
+      render();
+    });
   }
 
   // ── Lightbox ───────────────────────────────────────────────

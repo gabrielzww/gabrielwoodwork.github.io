@@ -846,6 +846,7 @@
       isUnlocked = true;
       sessionStorage.setItem('gw_unlocked', 'true');
       closePasswordModal();
+      document.getElementById('editOrderBtn').style.display = 'flex';
       openModal();
     } else {
       document.getElementById('passwordError').style.display = 'block';
@@ -1117,6 +1118,7 @@
   });
 
   // ── Init ───────────────────────────────────────────────────
+  if (isUnlocked) document.getElementById('editOrderBtn').style.display = 'flex';
   loadPhotos();
 </script>
 </body>

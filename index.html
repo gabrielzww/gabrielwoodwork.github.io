@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GabrielWoodwork — Gallery</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@700&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
   <!-- Inline SVG hatch pattern for blueprint text fill -->
   <svg width="0" height="0" style="position:absolute">
     <defs>
@@ -40,10 +40,10 @@
     body {
       background-color: var(--bg);
       background-image:
-        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px),
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
       background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
       color: var(--text);
       font-family: 'Josefin Sans', sans-serif;
@@ -78,10 +78,10 @@
 
     .brand-name {
       font-family: 'Bebas Neue', cursive;
-      font-size: 22px;
+      font-size: 30px;
       letter-spacing: 0.1em;
-      color: var(--text);
-      -webkit-text-stroke: 0.7px rgba(255,220,0,0.85);
+      color: #ffffff;
+      -webkit-text-stroke: 0.6px rgba(255,220,0,0.9);
     }
 
     .nav-right { display: flex; align-items: center; gap: 16px; }
@@ -102,18 +102,18 @@
       background: transparent;
       border: 1px solid transparent;
       border-radius: var(--radius-sm);
-      color: var(--text-muted);
+      color: transparent;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      opacity: 0.35;
+      cursor: default;
+      transition: none;
+      opacity: 0;
     }
 
     .btn-discreet:hover {
-      opacity: 1;
-      color: var(--text);
-      border-color: var(--border);
-      background: var(--surface-2);
+      opacity: 0;
+      color: transparent;
+      background: transparent;
+      border-color: transparent;
     }
       display: flex; align-items: center; gap: 8px;
       background: var(--accent);
@@ -169,7 +169,7 @@
     }
 
     .hero-svg-wrap {
-      width: 340px;
+      width: 387px;
       max-width: 100%;
     }
 
@@ -180,7 +180,7 @@
     }
 
     .hero h1 {
-      font-family: 'Bebas Neue', cursive;
+      font-family: 'Nunito', sans-serif;
       font-size: clamp(44px, 6.5vw, 80px);
       font-weight: 700;
       line-height: 1.05;
@@ -304,7 +304,7 @@
     }
 
     .empty-state h3 {
-      font-family: 'Bebas Neue', cursive;
+      font-family: 'Nunito', sans-serif;
       font-size: 32px;
       color: var(--text);
       letter-spacing: 0.1em;
@@ -351,7 +351,7 @@
     }
 
     .modal-header h2 {
-      font-family: 'Bebas Neue', cursive;
+      font-family: 'Nunito', sans-serif;
       font-size: 28px;
       letter-spacing: 0.1em;
       -webkit-text-stroke: 0.5px rgba(240,237,232,0.3);
@@ -528,7 +528,7 @@
     }
 
     .lightbox-meta strong {
-      font-family: 'Bebas Neue', cursive;
+      font-family: 'Nunito', sans-serif;
       font-size: 26px;
       color: var(--text);
       display: block;
@@ -677,7 +677,7 @@
     }
 
     .footer-brand {
-      font-family: 'Bebas Neue', cursive;
+      font-family: 'Nunito', sans-serif;
       font-size: 18px;
       letter-spacing: 0.1em;
       color: var(--text-muted);
@@ -745,7 +745,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-brand">
-    <div class="brand-icon">🪵</div>
+    <div class="brand-icon" ondblclick="checkPassword()" style="cursor:default">🪵</div>
     <span class="brand-name">GabrielWoodwork</span>
   </div>
   <div class="nav-right">
@@ -809,16 +809,49 @@
   <div class="hero-tag">Woodworking Gallery</div>
   <!-- Blueprint hatched SVG heading -->
   <div class="hero-svg-wrap">
-    <svg class="hero-svg" viewBox="0 0 400 85" xmlns="http://www.w3.org/2000/svg">
+    <svg class="hero-svg" viewBox="0 0 390 95" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <pattern id="hatch-white" patternUnits="userSpaceOnUse" width="9" height="9" patternTransform="rotate(45)">
-          <line x1="0" y1="0" x2="0" y2="9" stroke="rgba(232,244,255,0.55)" stroke-width="3"/>
+        <!-- Blue base + white hatch lines -->
+        <pattern id="bp-hatch" patternUnits="userSpaceOnUse" width="9" height="9" patternTransform="rotate(45)">
+          <rect width="9" height="9" fill="#1e56a0"/>
+          <line x1="0" y1="0" x2="0" y2="9" stroke="rgba(255,255,255,0.55)" stroke-width="2.2"/>
         </pattern>
-        <pattern id="hatch-gold" patternUnits="userSpaceOnUse" width="9" height="9" patternTransform="rotate(45)">
-          <line x1="0" y1="0" x2="0" y2="9" stroke="rgba(255,255,255,0.65)" stroke-width="3"/>
-        </pattern>
+        <clipPath id="proj-clip">
+          <text x="4" y="68" font-family="'Oswald', sans-serif" font-size="58" font-weight="700" letter-spacing="1">PROJECTS</text>
+        </clipPath>
       </defs>
-      <text x="0" y="75" font-family="'Bebas Neue', cursive" font-size="70" fill="url(#hatch-gold)" stroke="#e8f4ff" stroke-width="1.8" paint-order="stroke fill">Projects</text>
+
+      <!-- Blue + hatch fill inside letters -->
+      <rect width="430" height="85" fill="url(#bp-hatch)" clip-path="url(#proj-clip)"/>
+
+      <!-- White letter outline -->
+      <text x="4" y="68"
+        font-family="'Oswald', sans-serif"
+        font-size="58"
+        font-weight="700"
+        letter-spacing="1"
+        fill="none"
+        stroke="white"
+        stroke-width="0.6"
+        stroke-linejoin="miter">PROJECTS</text>
+
+      <!-- Dimension lines ABOVE text -->
+      <line x1="4" y1="8" x2="422" y2="8" stroke="rgba(255,255,255,0.5)" stroke-width="0.75"/>
+      <line x1="4" y1="4" x2="4" y2="12" stroke="rgba(255,255,255,0.5)" stroke-width="0.75"/>
+      <line x1="422" y1="4" x2="422" y2="12" stroke="rgba(255,255,255,0.5)" stroke-width="0.75"/>
+      <polygon points="18,8 28,5 28,11" fill="rgba(255,255,255,0.5)"/>
+      <polygon points="408,8 398,5 398,11" fill="rgba(255,255,255,0.5)"/>
+
+      <!-- Dimension lines BELOW text -->
+      <line x1="4" y1="92" x2="422" y2="92" stroke="rgba(255,255,255,0.5)" stroke-width="0.75"/>
+      <line x1="4" y1="88" x2="4" y2="96" stroke="rgba(255,255,255,0.5)" stroke-width="0.75"/>
+      <line x1="422" y1="88" x2="422" y2="96" stroke="rgba(255,255,255,0.5)" stroke-width="0.75"/>
+      <polygon points="18,92 28,89 28,95" fill="rgba(255,255,255,0.5)"/>
+      <polygon points="408,92 398,89 398,95" fill="rgba(255,255,255,0.5)"/>
+
+      <!-- Vertical dashed lines -->
+      <line x1="0" y1="6" x2="0" y2="94" stroke="rgba(255,255,255,0.4)" stroke-width="0.75" stroke-dasharray="3,3"/>
+      <line x1="426" y1="6" x2="426" y2="94" stroke="rgba(255,255,255,0.4)" stroke-width="0.75" stroke-dasharray="3,3"/>
     </svg>
   </div>
 </div>

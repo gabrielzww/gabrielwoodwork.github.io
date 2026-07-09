@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GabrielWoodwork — Gallery</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Slab:wght@900&family=Oswald:wght@700&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Slab:wght@900&family=Oswald:wght@700&family=Big+Shoulders+Display:wght@900&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
   <!-- Inline SVG hatch pattern for blueprint text fill -->
   <svg width="0" height="0" style="position:absolute">
     <defs>
@@ -112,6 +112,21 @@
       color: transparent;
       background: transparent;
       border-color: transparent;
+    }
+
+    /* Admin buttons visible after login */
+    #editOrderBtn, #signOutBtn {
+      color: var(--text-muted) !important;
+      opacity: 1 !important;
+      cursor: pointer !important;
+      border-color: var(--border) !important;
+      transition: all 0.2s !important;
+    }
+
+    #editOrderBtn:hover, #signOutBtn:hover {
+      color: var(--text) !important;
+      background: var(--surface-2) !important;
+      border-color: var(--border-hover) !important;
     }
       display: flex; align-items: center; gap: 8px;
       background: var(--accent);
@@ -809,7 +824,6 @@
   <div class="hero-svg-wrap">
     <svg class="hero-svg" viewBox="0 0 490 95" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Grey diagonal hatch on white matching new reference -->
         <pattern id="bp-hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
           <rect width="8" height="8" fill="rgba(255,255,255,0.08)"/>
           <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(180,200,220,0.6)" stroke-width="1.8"/>
@@ -820,7 +834,7 @@
       </defs>
 
       <!-- Hatch fill inside letters -->
-      <rect width="390" height="85" fill="url(#bp-hatch)" clip-path="url(#proj-clip)"/>
+      <rect width="490" height="85" fill="url(#bp-hatch)" clip-path="url(#proj-clip)"/>
 
       <!-- Letter outline -->
       <text x="2" y="72"
@@ -946,7 +960,7 @@
       closePasswordModal();
       document.getElementById('editOrderBtn').style.display = 'flex';
       document.getElementById('signOutBtn').style.display = 'flex';
-      openModal();
+      render();
     } else {
       document.getElementById('passwordError').style.display = 'block';
       document.getElementById('passwordInput').value = '';

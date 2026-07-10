@@ -571,6 +571,30 @@
 
     .lightbox-close:hover { background: var(--surface-2); color: var(--text); }
 
+    .lightbox-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      z-index: 201;
+    }
+
+    .lightbox-arrow:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.35);
+    }
+
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+
     /* ─── EDIT ORDER ─── */
     .edit-banner {
       background: rgba(255,220,0,0.08);
@@ -902,13 +926,15 @@
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <div class="lightbox-inner" onclick="e => e.stopPropagation()">
+  <button class="lightbox-arrow lightbox-prev" onclick="event.stopPropagation();navigateLightbox(-1)">&#8592;</button>
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
     <img id="lightboxImg" src="" alt="">
     <div class="lightbox-meta">
       <strong id="lightboxTitle"></strong>
       <span id="lightboxDate"></span>
     </div>
   </div>
+  <button class="lightbox-arrow lightbox-next" onclick="event.stopPropagation();navigateLightbox(1)">&#8594;</button>
 </div>
 
 <!-- FOOTER -->
@@ -1217,17 +1243,34 @@
   }
 
   // ── Lightbox ───────────────────────────────────────────────
+  let currentLightboxIndex = 0;
+
   function openLightbox(p) {
+    currentLightboxIndex = photos.indexOf(p);
+    showLightboxPhoto(currentLightboxIndex);
+    lightbox.classList.add('open');
+  }
+
+  function showLightboxPhoto(index) {
+    const p = photos[index];
     document.getElementById('lightboxImg').src = p.src;
     document.getElementById('lightboxTitle').textContent = p.title || '';
     document.getElementById('lightboxDate').textContent = formatDate(p.date);
-    lightbox.classList.add('open');
+  }
+
+  function navigateLightbox(dir) {
+    currentLightboxIndex = (currentLightboxIndex + dir + photos.length) % photos.length;
+    showLightboxPhoto(currentLightboxIndex);
   }
 
   function closeLightbox() { lightbox.classList.remove('open'); }
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { closeLightbox(); closeModal(); }
+    if (lightbox.classList.contains('open')) {
+      if (e.key === 'ArrowLeft')  navigateLightbox(-1);
+      if (e.key === 'ArrowRight') navigateLightbox(1);
+    }
   });
 
   // ── Init ───────────────────────────────────────────────────

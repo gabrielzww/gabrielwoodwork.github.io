@@ -585,21 +585,24 @@
     .lightbox-img-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
+      gap: 10px;
       width: 100%;
       max-width: 96vw;
+      box-sizing: border-box;
     }
 
     .lightbox-img-wrap img {
-      flex: 1;
+      flex: 0 1 auto;
       min-width: 0;
-      max-width: calc(96vw - 120px);
-      max-height: 75vh;
+      max-width: calc(96vw - 110px);
+      max-height: 65vh;
       width: auto;
       height: auto;
       object-fit: contain;
       border-radius: var(--radius);
       box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+      display: block;
     }
 
     /* ─── EDIT ORDER ─── */

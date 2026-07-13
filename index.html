@@ -585,14 +585,15 @@
     .lightbox-img-wrap {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       width: 100%;
+      max-width: 92vw;
     }
 
     .lightbox-img-wrap img {
       flex: 1;
-      max-width: calc(100% - 120px);
-      max-height: 75vh;
+      min-width: 0;
+      max-height: 80vh;
       object-fit: contain;
       border-radius: var(--radius);
       box-shadow: 0 40px 100px rgba(0,0,0,0.8);

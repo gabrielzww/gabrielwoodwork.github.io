@@ -182,7 +182,7 @@
     }
 
     .hero-svg-wrap {
-      width: 490px;
+      width: 560px;
       max-width: 100%;
     }
 
@@ -850,29 +850,29 @@
   <div class="hero-tag">Woodworking Gallery</div>
   <!-- Blueprint hatched SVG heading -->
   <div class="hero-svg-wrap">
-    <svg class="hero-svg" viewBox="0 0 395 76" xmlns="http://www.w3.org/2000/svg">
+    <svg class="hero-svg" viewBox="0 0 560 48" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="bp-hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
           <rect width="8" height="8" fill="rgba(255,255,255,0.08)"/>
           <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(180,200,220,0.6)" stroke-width="1.8"/>
         </pattern>
         <clipPath id="proj-clip">
-          <text x="2" y="58" font-family="'Roboto Slab', serif" font-size="46" font-weight="900" letter-spacing="2">COLLECTION</text>
+          <text x="2" y="40" font-family="'Roboto Slab', serif" font-size="35" font-weight="900" letter-spacing="2">COLLECTION</text>
         </clipPath>
       </defs>
 
       <!-- Hatch fill inside letters -->
-      <rect width="490" height="85" fill="url(#bp-hatch)" clip-path="url(#proj-clip)"/>
+      <rect width="560" height="48" fill="url(#bp-hatch)" clip-path="url(#proj-clip)"/>
 
       <!-- Letter outline -->
-      <text x="2" y="72"
+      <text x="2" y="40"
         font-family="'Roboto Slab', serif"
-        font-size="46"
+        font-size="35"
         font-weight="900"
         letter-spacing="2"
         fill="none"
         stroke="rgba(220,235,255,0.95)"
-        stroke-width="0.8"
+        stroke-width="0.4"
         stroke-linejoin="miter">COLLECTION</text>
     </svg>
   </div>
@@ -938,7 +938,7 @@
     </div>
     <div class="lightbox-meta">
       <strong id="lightboxTitle"></strong>
-      <span id="lightboxDate"></span>
+      <span id="lightboxDate" style="display:none"></span>
     </div>
   </div>
 </div>

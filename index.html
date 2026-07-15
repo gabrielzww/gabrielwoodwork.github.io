@@ -1176,7 +1176,9 @@
     document.body.style.top = `-${scrollPos}px`;
     document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
-    document.getElementById('lb').style.display = 'flex';
+    const lb = document.getElementById('lb');
+    lb.style.display = 'flex';
+    lb.scrollIntoView({ block: 'start' });
   }
 
   function lbNav(dir) {

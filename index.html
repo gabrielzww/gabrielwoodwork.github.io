@@ -509,12 +509,14 @@
       left: 0 !important;
       width: 100% !important;
       height: 100% !important;
+      height: 100dvh !important;
       z-index: 99999 !important;
       background: rgba(0,0,0,0.93);
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      -webkit-overflow-scrolling: touch;
     }
 
     .lightbox.open { display: flex !important; }
@@ -522,14 +524,16 @@
     .lightbox-close {
       position: absolute;
       top: 16px; right: 16px;
-      width: 42px; height: 42px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.25);
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
       border-radius: 6px;
       color: #fff;
-      font-size: 18px;
+      font-size: 20px;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
+      z-index: 100000;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .lightbox-inner {
@@ -538,7 +542,7 @@
       align-items: center;
       gap: 12px;
       width: 100%;
-      padding: 0 10px;
+      padding: 60px 10px 20px;
       box-sizing: border-box;
     }
 
@@ -556,7 +560,8 @@
 
     .lightbox-img-wrap img {
       max-width: calc(100% - 110px);
-      max-height: 80vh;
+      max-height: 70dvh;
+      max-height: 70vh;
       object-fit: contain;
       border-radius: 8px;
       display: block;
@@ -565,6 +570,7 @@
     .lightbox-arrow {
       flex-shrink: 0;
       width: 44px; height: 44px;
+      min-width: 44px;
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.25);
       border-radius: 6px;
@@ -572,13 +578,17 @@
       font-size: 20px;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .lightbox-arrow:hover, .lightbox-close:hover {
       background: rgba(255,255,255,0.22);
     }
 
-    body.lightbox-open { overflow: hidden; }
+    body.lightbox-open {
+      overflow: hidden !important;
+      touch-action: none;
+    }
 
     
       display: flex;

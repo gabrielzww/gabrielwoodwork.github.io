@@ -502,100 +502,64 @@
       box-shadow: 0 4px 16px var(--accent-glow);
     }
 
-    /* ─── LIGHTBOX ─── */
-    .lightbox {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      height: 100dvh !important;
-      z-index: 99999 !important;
-      background: rgba(0,0,0,0.93);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .lightbox.open { display: flex !important; }
-
-    .lightbox-close {
-      position: absolute;
-      top: 16px; right: 16px;
-      width: 44px; height: 44px;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 6px;
-      color: #fff;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 100000;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .lightbox-inner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      padding: 60px 10px 20px;
-      box-sizing: border-box;
-    }
-
-    .lightbox-meta { text-align: center; }
-    .lightbox-meta strong { color: #fff; font-size: 16px; display: block; }
-
-    .lightbox-img-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .lightbox-img-wrap img {
-      max-width: calc(100% - 110px);
-      max-height: 70dvh;
-      max-height: 70vh;
-      object-fit: contain;
-      border-radius: 8px;
-      display: block;
-    }
-
-    .lightbox-arrow {
-      flex-shrink: 0;
-      width: 44px; height: 44px;
-      min-width: 44px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 6px;
-      color: #fff;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .lightbox-arrow:hover, .lightbox-close:hover {
-      background: rgba(255,255,255,0.22);
-    }
-
-    body.lightbox-open {
-      overflow: hidden !important;
-      touch-action: none;
-    }
+    
 
     
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-    /* ─── EDIT ORDER ─── */
+    /* ─── LIGHTBOX ─── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-close {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      color: #fff; font-size: 20px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lightbox-img-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .lightbox-img-wrap img {
+      max-width: calc(100vw - 120px);
+      max-height: calc(100vh - 80px);
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .lightbox-arrow {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 6px;
+      color: #fff; font-size: 22px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lightbox-arrow:hover, .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+    .lightbox-inner { text-align: center; padding-top: 8px; }
+    .lightbox-inner strong { color: #fff; font-size: 14px; }
     .edit-banner {
       background: rgba(255,220,0,0.08);
       border-bottom: 1px solid rgba(255,220,0,0.2);
@@ -925,17 +889,14 @@
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <div class="lightbox-inner" onclick="event.stopPropagation()">
-    <div class="lightbox-img-wrap">
-      <button class="lightbox-arrow lightbox-prev" onclick="event.stopPropagation();navigateLightbox(-1)">&#8592;</button>
-      <img id="lightboxImg" src="" alt="">
-      <button class="lightbox-arrow lightbox-next" onclick="event.stopPropagation();navigateLightbox(1)">&#8594;</button>
-    </div>
-    <div class="lightbox-meta">
-      <strong id="lightboxTitle"></strong>
-      <span id="lightboxDate" style="display:none"></span>
-    </div>
+  <button class="lightbox-close" onclick="event.stopPropagation();closeLightbox()">✕</button>
+  <div class="lightbox-img-wrap" onclick="event.stopPropagation()">
+    <button class="lightbox-arrow" onclick="navigateLightbox(-1)">&#8592;</button>
+    <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-arrow" onclick="navigateLightbox(1)">&#8594;</button>
+  </div>
+  <div class="lightbox-inner">
+    <strong id="lightboxTitle"></strong>
   </div>
 </div>
 
@@ -1246,30 +1207,23 @@
 
   // ── Lightbox ───────────────────────────────────────────────
   let currentLightboxIndex = 0;
-  let scrollY = 0;
 
   function openLightbox(p) {
     currentLightboxIndex = photos.indexOf(p);
-    showLightboxPhoto(currentLightboxIndex);
-    document.body.classList.add('lightbox-open');
-    lightbox.classList.add('open');
-  }
-
-  function showLightboxPhoto(index) {
-    const p = photos[index];
     document.getElementById('lightboxImg').src = p.src;
     document.getElementById('lightboxTitle').textContent = p.title || '';
-    document.getElementById('lightboxDate').textContent = formatDate(p.date);
+    lightbox.classList.add('open');
   }
 
   function navigateLightbox(dir) {
     currentLightboxIndex = (currentLightboxIndex + dir + photos.length) % photos.length;
-    showLightboxPhoto(currentLightboxIndex);
+    const p = photos[currentLightboxIndex];
+    document.getElementById('lightboxImg').src = p.src;
+    document.getElementById('lightboxTitle').textContent = p.title || '';
   }
 
   function closeLightbox() {
     lightbox.classList.remove('open');
-    document.body.classList.remove('lightbox-open');
   }
 
   document.addEventListener('keydown', e => {

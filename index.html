@@ -1030,6 +1030,11 @@
         if (e.target.closest('.card-delete')) return;
         lbOpen(i);
       });
+      card.addEventListener('touchend', e => {
+        if (e.target.closest('.card-delete')) return;
+        e.preventDefault();
+        lbOpen(i);
+      }, { passive: false });
       gallery.appendChild(card);
     });
   }

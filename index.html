@@ -1170,6 +1170,8 @@
     document.getElementById('lbImg').src = photos[i].src;
     document.getElementById('lbTitle').textContent = photos[i].title || '';
     document.getElementById('lb').style.display = 'flex';
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   }
 
   function lbNav(dir) {

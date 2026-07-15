@@ -1169,9 +1169,11 @@
     lbIndex = i;
     document.getElementById('lbImg').src = photos[i].src;
     document.getElementById('lbTitle').textContent = photos[i].title || '';
+    const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPos}px`;
+    document.body.style.width = '100%';
     document.getElementById('lb').style.display = 'flex';
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
   }
 
   function lbNav(dir) {
@@ -1181,7 +1183,12 @@
   }
 
   function lbClose() {
+    const scrollPos = Math.abs(parseInt(document.body.style.top || '0'));
     document.getElementById('lb').style.display = 'none';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, scrollPos);
   }
 
   document.addEventListener('keydown', e => {

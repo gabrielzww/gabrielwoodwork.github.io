@@ -504,13 +504,23 @@
 
     /* ─── LIGHTBOX ─── */
     .lightbox {
-      position: fixed; inset: 0; z-index: 200;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 200;
       background: rgba(0,0,0,0.95);
       backdrop-filter: blur(16px);
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 60px 20px 20px;
+      padding: 50px 20px 20px;
+    }
+
+    body.lightbox-open {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      left: 0;
+      right: 0;
     }
 
     .lightbox.open {
@@ -1255,10 +1265,14 @@
 
   // ── Lightbox ───────────────────────────────────────────────
   let currentLightboxIndex = 0;
+  let scrollY = 0;
 
   function openLightbox(p) {
     currentLightboxIndex = photos.indexOf(p);
     showLightboxPhoto(currentLightboxIndex);
+    scrollY = window.scrollY;
+    document.body.style.top = `-${scrollY}px`;
+    document.body.classList.add('lightbox-open');
     lightbox.classList.add('open');
   }
 
@@ -1274,7 +1288,12 @@
     showLightboxPhoto(currentLightboxIndex);
   }
 
-  function closeLightbox() { lightbox.classList.remove('open'); }
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.classList.remove('lightbox-open');
+    document.body.style.top = '';
+    window.scrollTo(0, scrollY);
+  }
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { closeLightbox(); closeModal(); }

@@ -509,57 +509,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-    /* ─── LIGHTBOX ─── */
-    .lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.92);
-      z-index: 9999;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .lightbox.open { display: flex; }
-    .lightbox-close {
-      position: absolute;
-      top: 12px; right: 12px;
-      width: 44px; height: 44px;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 6px;
-      color: #fff; font-size: 20px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .lightbox-img-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 10px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .lightbox-img-wrap img {
-      max-width: calc(100vw - 120px);
-      max-height: calc(100vh - 80px);
-      object-fit: contain;
-      border-radius: 8px;
-    }
-    .lightbox-arrow {
-      flex-shrink: 0;
-      width: 44px; height: 44px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 6px;
-      color: #fff; font-size: 22px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .lightbox-arrow:hover, .lightbox-close:hover { background: rgba(255,255,255,0.25); }
-    .lightbox-inner { text-align: center; padding-top: 8px; }
-    .lightbox-inner strong { color: #fff; font-size: 14px; }
+    
     .edit-banner {
       background: rgba(255,220,0,0.08);
       border-bottom: 1px solid rgba(255,220,0,0.2);
@@ -888,16 +838,17 @@
 </div>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="event.stopPropagation();closeLightbox()">✕</button>
-  <div class="lightbox-img-wrap" onclick="event.stopPropagation()">
-    <button class="lightbox-arrow" onclick="navigateLightbox(-1)">&#8592;</button>
-    <img id="lightboxImg" src="" alt="">
-    <button class="lightbox-arrow" onclick="navigateLightbox(1)">&#8594;</button>
+<!-- LIGHTBOX -->
+<div id="lb" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:9999;box-sizing:border-box;">
+  <div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:100%;">
+      <button onclick="lbNav(-1)" style="flex-shrink:0;width:44px;height:44px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;font-size:22px;cursor:pointer;">&#8592;</button>
+      <img id="lbImg" src="" style="max-width:calc(100% - 120px);max-height:80vh;object-fit:contain;border-radius:8px;">
+      <button onclick="lbNav(1)" style="flex-shrink:0;width:44px;height:44px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;font-size:22px;cursor:pointer;">&#8594;</button>
+    </div>
+    <p id="lbTitle" style="color:#fff;margin-top:12px;font-family:'Josefin Sans',sans-serif;font-size:14px;"></p>
   </div>
-  <div class="lightbox-inner">
-    <strong id="lightboxTitle"></strong>
-  </div>
+  <button onclick="lbClose()" style="position:absolute;top:12px;right:12px;width:44px;height:44px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;font-size:20px;cursor:pointer;">✕</button>
 </div>
 
 <!-- FOOTER -->
@@ -983,7 +934,6 @@
   const modalOverlay= document.getElementById('modalOverlay');
   const dropZone    = document.getElementById('dropZone');
   const selectedName= document.getElementById('selectedName');
-  const lightbox    = document.getElementById('lightbox');
 
   // ── Helpers ────────────────────────────────────────────────
   function formatDate(d) {
@@ -1074,7 +1024,7 @@
       });
       card.addEventListener('click', e => {
         if (e.target.closest('.card-delete')) return;
-        openLightbox(p);
+        lbOpen(i);
       });
       gallery.appendChild(card);
     });
@@ -1206,31 +1156,34 @@
   }
 
   // ── Lightbox ───────────────────────────────────────────────
-  let currentLightboxIndex = 0;
+  
 
-  function openLightbox(p) {
-    currentLightboxIndex = photos.indexOf(p);
-    document.getElementById('lightboxImg').src = p.src;
-    document.getElementById('lightboxTitle').textContent = p.title || '';
-    lightbox.classList.add('open');
+  // ── Lightbox ───────────────────────────────────────────────
+  let lbIndex = 0;
+
+  function lbOpen(i) {
+    lbIndex = i;
+    document.getElementById('lbImg').src = photos[i].src;
+    document.getElementById('lbTitle').textContent = photos[i].title || '';
+    document.getElementById('lb').style.display = 'block';
+    window.scrollTo(0,0);
   }
 
-  function navigateLightbox(dir) {
-    currentLightboxIndex = (currentLightboxIndex + dir + photos.length) % photos.length;
-    const p = photos[currentLightboxIndex];
-    document.getElementById('lightboxImg').src = p.src;
-    document.getElementById('lightboxTitle').textContent = p.title || '';
+  function lbNav(dir) {
+    lbIndex = (lbIndex + dir + photos.length) % photos.length;
+    document.getElementById('lbImg').src = photos[lbIndex].src;
+    document.getElementById('lbTitle').textContent = photos[lbIndex].title || '';
   }
 
-  function closeLightbox() {
-    lightbox.classList.remove('open');
+  function lbClose() {
+    document.getElementById('lb').style.display = 'none';
   }
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeLightbox(); closeModal(); }
-    if (lightbox.classList.contains('open')) {
-      if (e.key === 'ArrowLeft')  navigateLightbox(-1);
-      if (e.key === 'ArrowRight') navigateLightbox(1);
+    if (e.key === 'Escape') { lbClose(); closeModal(); }
+    if (document.getElementById('lb').style.display !== 'none') {
+      if (e.key === 'ArrowLeft') lbNav(-1);
+      if (e.key === 'ArrowRight') lbNav(1);
     }
   });
 

@@ -692,6 +692,27 @@
   </script>
 </head>
 <body>
+<div id="lb" onclick="lbClose()" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:rgba(0,0,0,0.92);z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;box-sizing:border-box;">
+  <div onclick="event.stopPropagation()" style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;box-sizing:border-box;">
+    <!-- X button at top of content -->
+    <div style="width:100%;display:flex;justify-content:flex-end;">
+      <button onclick="lbClose()" style="width:40px;height:40px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;font-size:18px;cursor:pointer;">✕</button>
+    </div>
+    <!-- Image with arrows -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;width:100%;">
+      <button onclick="lbNav(-1)" style="flex-shrink:0;width:44px;height:44px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;font-size:22px;cursor:pointer;">&#8592;</button>
+      <img id="lbImg" src="" style="max-width:calc(100% - 120px);max-height:calc(100dvh - 140px);max-height:calc(100vh - 140px);object-fit:contain;border-radius:8px;display:block;">
+      <button onclick="lbNav(1)" style="flex-shrink:0;width:44px;height:44px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;font-size:22px;cursor:pointer;">&#8594;</button>
+    </div>
+    <p id="lbTitle" style="color:#fff;margin:0;font-family:'Josefin Sans',sans-serif;font-size:14px;text-align:center;"></p>
+  </div>
+</div>
+
+<!-- MOBILE HINT TOAST -->
+<div id="mobileHint" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.75);color:#fff;padding:10px 20px;border-radius:100px;font-family:'Josefin Sans',sans-serif;font-size:13px;letter-spacing:0.05em;z-index:9998;white-space:nowrap;pointer-events:none;">
+  Tap any photo to enlarge
+</div>
+
 
 <!-- NAV -->
 <nav>
@@ -841,22 +862,6 @@
 
 <!-- LIGHTBOX -->
 <!-- LIGHTBOX -->
-<div id="lb" onclick="lbClose()" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:rgba(0,0,0,0.92);z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;box-sizing:border-box;">
-  <div onclick="event.stopPropagation()" style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;box-sizing:border-box;">
-    <!-- X button at top of content -->
-    <div style="width:100%;display:flex;justify-content:flex-end;">
-      <button onclick="lbClose()" style="width:40px;height:40px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;font-size:18px;cursor:pointer;">✕</button>
-    </div>
-    <!-- Image with arrows -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;width:100%;">
-      <button onclick="lbNav(-1)" style="flex-shrink:0;width:44px;height:44px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;font-size:22px;cursor:pointer;">&#8592;</button>
-      <img id="lbImg" src="" style="max-width:calc(100% - 120px);max-height:calc(100dvh - 140px);max-height:calc(100vh - 140px);object-fit:contain;border-radius:8px;display:block;">
-      <button onclick="lbNav(1)" style="flex-shrink:0;width:44px;height:44px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;font-size:22px;cursor:pointer;">&#8594;</button>
-    </div>
-    <p id="lbTitle" style="color:#fff;margin:0;font-family:'Josefin Sans',sans-serif;font-size:14px;text-align:center;"></p>
-  </div>
-</div>
-
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -1204,6 +1209,14 @@
       if (e.key === 'ArrowRight') lbNav(1);
     }
   });
+
+  // ── Mobile hint toast ─────────────────────────────────────
+  if ('ontouchstart' in window) {
+    const hint = document.getElementById('mobileHint');
+    hint.style.display = 'block';
+    setTimeout(() => { hint.style.opacity = '0'; hint.style.transition = 'opacity 1s'; }, 3000);
+    setTimeout(() => { hint.style.display = 'none'; }, 4000);
+  }
 
   // ── Init ───────────────────────────────────────────────────
   if (isUnlocked) {

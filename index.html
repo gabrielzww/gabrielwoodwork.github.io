@@ -813,10 +813,10 @@
 <!-- GALLERY -->
 <div class="gallery-wrap">
   <div class="gallery-grid" id="gallery"></div>
-  <div class="empty-state visible" id="emptyState">
-    <div class="empty-icon">🪚</div>
-    <h3>Nothing here yet</h3>
-    <p>Add your first photo to start building your woodworking gallery.</p>
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon" id="emptyIcon">⏳</div>
+    <h3 id="emptyHeading" style="display:none">Nothing here yet</h3>
+    <p id="emptySub" style="display:none">Add your first photo to start building your woodworking gallery.</p>
   </div>
 </div>
 
@@ -958,10 +958,12 @@
   }
 
   // ── JSONBin: load & save shared photo list ─────────────────
+  let photosLoaded = false;
+
   async function loadPhotos() {
     if (!BIN_ID || !JSONBIN_KEY) {
-      // fallback to localStorage if JSONBin not configured
       photos = JSON.parse(localStorage.getItem('workshop_photos') || '[]');
+      photosLoaded = true;
       render(); return;
     }
     try {
@@ -973,6 +975,7 @@
     } catch(e) {
       photos = JSON.parse(localStorage.getItem('workshop_photos') || '[]');
     }
+    photosLoaded = true;
     render();
   }
 
@@ -1005,7 +1008,17 @@
   function render() {
     gallery.innerHTML = '';
     updateCount();
-    if (photos.length === 0) { emptyState.classList.add('visible'); return; }
+    if (photos.length === 0 && photosLoaded) {
+      document.getElementById('emptyIcon').textContent = '🪚';
+      document.getElementById('emptyHeading').style.display = 'block';
+      document.getElementById('emptySub').style.display = 'block';
+      emptyState.classList.add('visible');
+      return;
+    }
+    if (photos.length === 0 && !photosLoaded) {
+      emptyState.classList.add('visible');
+      return;
+    }
     emptyState.classList.remove('visible');
 
     // show admin buttons if unlocked
